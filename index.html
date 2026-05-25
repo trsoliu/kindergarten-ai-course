@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>认识人工智能：AI 小助手就在身边</title>
+  <style>
+    :root {
+      --ink: #17324d;
+      --soft-ink: #47627f;
+      --paper: #fffaf1;
+      --sun: #ffd45a;
+      --mint: #6ee7b7;
+      --sky: #6cc9ff;
+      --coral: #ff7a72;
+      --berry: #e15b9c;
+      --green: #3dbb74;
+      --shadow: 0 24px 60px rgba(34, 49, 72, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: #eef7ff;
+      font-family: "Arial Rounded MT Bold", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    body {
+      letter-spacing: 0;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100svh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(24px, 4vw, 64px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(4vw) scale(0.985);
+      transition: opacity 420ms ease, transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 212, 90, 0.45), transparent 24%),
+        linear-gradient(135deg, #f4fbff 0%, #fff9ef 48%, #f5fff9 100%);
+    }
+
+    .slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: auto 4vw 3vh auto;
+      width: 18vw;
+      height: 18vw;
+      max-width: 220px;
+      max-height: 220px;
+      min-width: 110px;
+      min-height: 110px;
+      border-radius: 50%;
+      background: repeating-linear-gradient(45deg, rgba(23, 50, 77, 0.06) 0 10px, transparent 10px 22px);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .slide-inner {
+      width: min(1180px, 94vw);
+      min-height: min(760px, 82svh);
+      display: grid;
+      align-items: center;
+      gap: clamp(20px, 4vw, 56px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-layout {
+      grid-template-columns: 0.82fr 1.18fr;
+    }
+
+    .center-layout {
+      justify-items: center;
+      text-align: center;
+    }
+
+    .two-layout {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .three-layout {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .title-stack {
+      display: grid;
+      gap: 18px;
+      align-content: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      color: var(--soft-ink);
+      font-size: clamp(18px, 2vw, 28px);
+      font-weight: 900;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+
+    h1 {
+      font-size: clamp(62px, 8vw, 128px);
+    }
+
+    h2 {
+      font-size: clamp(52px, 7vw, 108px);
+    }
+
+    .big-word {
+      font-size: clamp(76px, 10vw, 150px);
+      line-height: 1.05;
+      font-weight: 1000;
+      color: var(--ink);
+    }
+
+    .short-line {
+      margin: 0;
+      max-width: 720px;
+      color: var(--soft-ink);
+      font-size: clamp(22px, 2.7vw, 38px);
+      line-height: 1.28;
+      font-weight: 900;
+    }
+
+    .visual {
+      width: min(560px, 82vw);
+      aspect-ratio: 1 / 1;
+      position: relative;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 28px 34px rgba(34, 49, 72, 0.18));
+    }
+
+    .visual.wide {
+      width: min(860px, 90vw);
+      aspect-ratio: 16 / 9;
+    }
+
+    .blob {
+      position: absolute;
+      inset: 8%;
+      border-radius: 44% 56% 52% 48% / 48% 43% 57% 52%;
+      background: #ffffff;
+      border: 8px solid rgba(23, 50, 77, 0.09);
+      box-shadow: var(--shadow);
+    }
+
+    .blob.sun {
+      background: linear-gradient(160deg, #fff7ca, #ffd45a);
+    }
+
+    .blob.mint {
+      background: linear-gradient(160deg, #e9fff5, #6ee7b7);
+    }
+
+    .blob.sky {
+      background: linear-gradient(160deg, #eefaff, #6cc9ff);
+    }
+
+    .blob.coral {
+      background: linear-gradient(160deg, #fff2f0, #ff8c7d);
+    }
+
+    .emoji {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(122px, 18vw, 230px);
+      line-height: 1;
+      transform: translateY(-2%);
+      text-shadow: 0 12px 20px rgba(23, 50, 77, 0.12);
+    }
+
+    .emoji-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(18px, 3vw, 44px);
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .emoji-badge {
+      width: clamp(138px, 17vw, 230px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      font-size: clamp(72px, 10vw, 140px);
+      background: #fff;
+      border: 7px solid rgba(23, 50, 77, 0.08);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transition: transform 220ms ease;
+    }
+
+    .emoji-badge:hover {
+      transform: translateY(-8px) rotate(-1deg);
+    }
+
+    .label {
+      display: inline-grid;
+      place-items: center;
+      min-height: 54px;
+      padding: 0 18px;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      border: 4px solid rgba(23, 50, 77, 0.08);
+      box-shadow: 0 14px 28px rgba(34, 49, 72, 0.13);
+      font-size: clamp(22px, 3vw, 42px);
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .visual-card {
+      min-height: 58svh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      justify-items: center;
+      gap: 18px;
+      padding: clamp(18px, 3vw, 34px);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 6px solid rgba(23, 50, 77, 0.07);
+      box-shadow: var(--shadow);
+    }
+
+    .phone {
+      width: min(330px, 48vw);
+      aspect-ratio: 9 / 16;
+      border-radius: 34px;
+      background: #17324d;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+      display: grid;
+      align-content: end;
+      gap: 16px;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 82px;
+      height: 10px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .bubble {
+      max-width: 88%;
+      padding: 14px 16px;
+      border-radius: 8px;
+      color: #17324d;
+      background: #ffffff;
+      font-size: clamp(18px, 2.1vw, 28px);
+      font-weight: 900;
+    }
+
+    .bubble.answer {
+      justify-self: end;
+      background: var(--mint);
+    }
+
+    .speaker {
+      width: min(360px, 58vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 38%, #ffffff 0 18%, #6cc9ff 19% 58%, #17324d 59% 62%, #ffffff 63%);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .speaker::before,
+    .speaker::after {
+      content: "";
+      position: absolute;
+      inset: -34px;
+      border: 10px solid rgba(108, 201, 255, 0.38);
+      border-radius: 50%;
+      animation: pulse 1800ms ease-out infinite;
+    }
+
+    .speaker::after {
+      inset: -72px;
+      animation-delay: 380ms;
+    }
+
+    .car-scene {
+      width: min(650px, 82vw);
+      aspect-ratio: 16 / 9;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .car-body {
+      position: absolute;
+      bottom: 18%;
+      width: 76%;
+      height: 35%;
+      border-radius: 70px 70px 18px 18px;
+      background: linear-gradient(180deg, #ff8c7d, #e15b9c);
+      box-shadow: var(--shadow);
+    }
+
+    .car-top {
+      position: absolute;
+      bottom: 48%;
+      width: 44%;
+      height: 28%;
+      border-radius: 80px 80px 8px 8px;
+      background: #6cc9ff;
+      border: 8px solid #17324d;
+    }
+
+    .wheel {
+      position: absolute;
+      bottom: 10%;
+      width: 19%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #17324d;
+      border: 16px solid #ffffff;
+    }
+
+    .wheel.left {
+      left: 21%;
+    }
+
+    .wheel.right {
+      right: 21%;
+    }
+
+    .route {
+      position: absolute;
+      top: 9%;
+      right: 7%;
+      display: grid;
+      place-items: center;
+      width: 120px;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--green);
+      font-size: 72px;
+      box-shadow: 0 16px 34px rgba(34, 49, 72, 0.15);
+    }
+
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: clamp(12px, 2vw, 24px);
+      width: 100%;
+    }
+
+    .skill {
+      min-height: min(48svh, 340px);
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 16px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 6px solid rgba(23, 50, 77, 0.07);
+      box-shadow: var(--shadow);
+    }
+
+    .skill .icon {
+      font-size: clamp(62px, 9vw, 128px);
+    }
+
+    .skill .word {
+      font-size: clamp(30px, 4vw, 62px);
+      font-weight: 1000;
+      color: var(--ink);
+    }
+
+    .video-shell {
+      width: min(900px, 86vw);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #17324d;
+      box-shadow: var(--shadow);
+      border: 8px solid #ffffff;
+    }
+
+    video,
+    .remote-video {
+      display: block;
+      width: 100%;
+      max-height: 52svh;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      background: #17324d;
+      border: 0;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .gesture-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: clamp(14px, 2vw, 30px);
+      width: 100%;
+    }
+
+    .gesture {
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 12px;
+      min-height: min(45svh, 330px);
+      border-radius: 8px;
+      background: #fff;
+      border: 6px solid rgba(23, 50, 77, 0.07);
+      box-shadow: var(--shadow);
+    }
+
+    .gesture .hand {
+      font-size: clamp(74px, 10vw, 146px);
+    }
+
+    .balloon-scene {
+      width: min(760px, 86vw);
+      aspect-ratio: 16 / 10;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(108, 201, 255, 0.45), rgba(255, 255, 255, 0.78)),
+        #eaf8ff;
+      border: 8px solid #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .video-slide .slide-inner,
+    .play-slide .slide-inner {
+      gap: clamp(14px, 2.4vw, 32px);
+    }
+
+    .video-slide h2,
+    .play-slide h2 {
+      font-size: clamp(44px, 5.6vw, 84px);
+    }
+
+    .play-slide .balloon-scene {
+      width: min(560px, 80vw);
+    }
+
+    .play-slide .action {
+      min-height: 54px;
+      font-size: clamp(22px, 2.5vw, 34px);
+    }
+
+    .balloon {
+      position: absolute;
+      width: clamp(54px, 8vw, 92px);
+      aspect-ratio: 0.78;
+      border-radius: 52% 52% 48% 48%;
+      background: var(--coral);
+      box-shadow: inset -12px -18px 0 rgba(23, 50, 77, 0.1), 0 16px 24px rgba(34, 49, 72, 0.12);
+      animation: float 2800ms ease-in-out infinite;
+    }
+
+    .balloon::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -46%;
+      width: 2px;
+      height: 44%;
+      background: rgba(23, 50, 77, 0.35);
+    }
+
+    .balloon:nth-child(1) {
+      left: 10%;
+      top: 17%;
+      background: #ff7a72;
+    }
+
+    .balloon:nth-child(2) {
+      left: 38%;
+      top: 8%;
+      background: #6ee7b7;
+      animation-delay: 240ms;
+    }
+
+    .balloon:nth-child(3) {
+      right: 12%;
+      top: 23%;
+      background: #ffd45a;
+      animation-delay: 520ms;
+    }
+
+    .balloon:nth-child(4) {
+      left: 22%;
+      bottom: 12%;
+      background: #e15b9c;
+      animation-delay: 760ms;
+    }
+
+    .balloon:nth-child(5) {
+      right: 28%;
+      bottom: 10%;
+      background: #6cc9ff;
+      animation-delay: 1040ms;
+    }
+
+    .game-hand {
+      position: absolute;
+      left: 50%;
+      bottom: 14%;
+      transform: translateX(-50%);
+      font-size: clamp(90px, 12vw, 154px);
+      filter: drop-shadow(0 18px 24px rgba(34, 49, 72, 0.2));
+      animation: grab 1600ms ease-in-out infinite;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
+      padding: 0 26px;
+      border: 0;
+      border-radius: 8px;
+      color: #17324d;
+      background: var(--sun);
+      box-shadow: 0 14px 24px rgba(34, 49, 72, 0.16);
+      text-decoration: none;
+      font-size: clamp(24px, 3vw, 42px);
+      font-weight: 1000;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .action:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 34px rgba(34, 49, 72, 0.2);
+    }
+
+    .play-slide .action {
+      min-height: 54px;
+      font-size: clamp(22px, 2.5vw, 34px);
+    }
+
+    .mistake-scene {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(14px, 2vw, 28px);
+      width: 100%;
+    }
+
+    .mistake {
+      min-height: min(52svh, 390px);
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 18px;
+      background: #ffffff;
+      border: 6px solid rgba(23, 50, 77, 0.07);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .mistake .icon {
+      font-size: clamp(80px, 11vw, 160px);
+    }
+
+    .buckets {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(16px, 2.5vw, 34px);
+      width: 100%;
+    }
+
+    .bucket {
+      min-height: min(55svh, 420px);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 18px;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 6px solid rgba(23, 50, 77, 0.07);
+      box-shadow: var(--shadow);
+    }
+
+    .bucket .icon {
+      font-size: clamp(84px, 12vw, 150px);
+    }
+
+    .bucket .examples {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      color: var(--soft-ink);
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 900;
+    }
+
+    .final-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: clamp(12px, 2vw, 24px);
+      width: 100%;
+    }
+
+    .final-icon {
+      min-height: min(36svh, 250px);
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: #fff;
+      border: 6px solid rgba(23, 50, 77, 0.07);
+      box-shadow: var(--shadow);
+      font-size: clamp(70px, 10vw, 142px);
+    }
+
+    .topbar {
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      top: 16px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      pointer-events: none;
+    }
+
+    .progress {
+      flex: 1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(23, 50, 77, 0.12);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--coral), var(--sun), var(--mint), var(--sky));
+      transition: width 260ms ease;
+    }
+
+    .counter {
+      min-width: 72px;
+      color: var(--soft-ink);
+      font-size: 16px;
+      font-weight: 1000;
+      text-align: right;
+    }
+
+    .controls {
+      position: fixed;
+      right: 18px;
+      bottom: 16px;
+      z-index: 30;
+      display: flex;
+      gap: 8px;
+    }
+
+    .controls button {
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 10px 24px rgba(34, 49, 72, 0.16);
+      cursor: pointer;
+      font-size: 23px;
+      font-weight: 1000;
+    }
+
+    .notes-panel {
+      position: fixed;
+      left: 18px;
+      bottom: 16px;
+      z-index: 25;
+      width: min(560px, calc(100vw - 36px));
+      max-height: 42svh;
+      overflow: auto;
+      display: none;
+      padding: 16px 18px;
+      border-radius: 8px;
+      color: #17324d;
+      background: rgba(255, 255, 255, 0.94);
+      border: 4px solid rgba(23, 50, 77, 0.08);
+      box-shadow: var(--shadow);
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 800;
+    }
+
+    .notes-panel.open {
+      display: block;
+    }
+
+    .notes-panel strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 20px;
+    }
+
+    .notes {
+      display: none;
+    }
+
+    .slide[data-tone="blue"] {
+      background:
+        radial-gradient(circle at 84% 20%, rgba(108, 201, 255, 0.5), transparent 22%),
+        linear-gradient(135deg, #f5fbff 0%, #e8fff5 100%);
+    }
+
+    .slide[data-tone="yellow"] {
+      background:
+        radial-gradient(circle at 15% 18%, rgba(255, 212, 90, 0.56), transparent 24%),
+        linear-gradient(135deg, #fffaf1 0%, #effcff 100%);
+    }
+
+    .slide[data-tone="pink"] {
+      background:
+        radial-gradient(circle at 86% 18%, rgba(225, 91, 156, 0.25), transparent 22%),
+        linear-gradient(135deg, #fff5f7 0%, #f3fff9 100%);
+    }
+
+    .slide[data-tone="green"] {
+      background:
+        radial-gradient(circle at 15% 22%, rgba(61, 187, 116, 0.32), transparent 25%),
+        linear-gradient(135deg, #f2fff8 0%, #fff8ed 100%);
+    }
+
+    @keyframes pulse {
+      from {
+        opacity: 0.75;
+        transform: scale(0.84);
+      }
+      to {
+        opacity: 0;
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+      50% {
+        transform: translateY(-18px) rotate(2deg);
+      }
+    }
+
+    @keyframes grab {
+      0%,
+      100% {
+        transform: translateX(-50%) scale(1);
+      }
+      45% {
+        transform: translateX(-50%) scale(1.12);
+      }
+      62% {
+        transform: translateX(-50%) scale(0.96);
+      }
+    }
+
+    .is-active .title-stack,
+    .is-active .visual,
+    .is-active .visual-card,
+    .is-active .skill,
+    .is-active .gesture,
+    .is-active .bucket,
+    .is-active .mistake,
+    .is-active .video-shell,
+    .is-active .balloon-scene {
+      animation: rise 560ms ease both;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 840px) {
+      .slide {
+        padding: 52px 18px 70px;
+        overflow-y: auto;
+      }
+
+      .slide-inner,
+      .hero-layout,
+      .two-layout,
+      .three-layout {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .skill-grid,
+      .gesture-row,
+      .mistake-scene,
+      .buckets,
+      .final-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .visual-card,
+      .skill,
+      .gesture,
+      .bucket,
+      .mistake {
+        min-height: 240px;
+      }
+
+      .phone {
+        width: min(260px, 70vw);
+      }
+
+      .topbar {
+        top: 10px;
+        left: 12px;
+        right: 12px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .skill-grid,
+      .gesture-row,
+      .mistake-scene,
+      .buckets,
+      .final-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide is-active" data-tone="yellow">
+      <div class="slide-inner hero-layout">
+        <div class="title-stack">
+          <div class="eyebrow">40 分钟分享课</div>
+          <h1>AI 小助手</h1>
+          <p class="short-line">就在我们身边</p>
+        </div>
+        <div class="visual" aria-hidden="true">
+          <div class="blob sun"></div>
+          <div class="emoji">🤖</div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>开场</strong>
+        语气轻松一点：“今天我们认识一个新朋友，叫 AI 小助手。它不是魔法，也不只在电视里，它可能就在我们家里。”
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="blue">
+      <div class="slide-inner center-layout">
+        <h2>你见过 AI 吗？</h2>
+        <div class="emoji-row" aria-hidden="true">
+          <div class="emoji-badge">🙋</div>
+          <div class="emoji-badge">📱</div>
+          <div class="emoji-badge">🔊</div>
+          <div class="emoji-badge">🚗</div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>0-3 分钟：举手开场</strong>
+        问：“你身边有没有 AI？”孩子说什么先接住，不急着纠正。可以把答案口头归类成手机、音箱、汽车、机器人。
+      </aside>
+    </section>
+
+    <section class="slide video-slide" data-tone="green">
+      <div class="slide-inner center-layout">
+        <h2>先看视频</h2>
+        <div class="video-shell">
+          <video id="localAiVideo" controls playsinline preload="metadata">
+            <source src="什麼是AI？｜AI可以做什麼｜樂樂TV【今天我知道】 [VKTDSz8YReM] 1080p.mp4" type="video/mp4">
+            你的浏览器无法播放这个视频。
+          </video>
+          <iframe
+            id="remoteAiVideo"
+            class="remote-video"
+            src="https://www.youtube-nocookie.com/embed/VKTDSz8YReM"
+            title="什么是 AI？"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            hidden></iframe>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>3-8 分钟：视频解释什么是 AI</strong>
+        视频已经负责概念解释。看完只问：“AI 可以做什么？”“它是在听、看，还是回答？”
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="yellow">
+      <div class="slide-inner center-layout">
+        <h2>AI 在哪里？</h2>
+        <div class="three-layout" style="width: 100%;">
+          <div class="visual-card">
+            <div class="emoji">📱</div>
+            <div class="label">手机</div>
+          </div>
+          <div class="visual-card">
+            <div class="emoji">🔊</div>
+            <div class="label">音箱</div>
+          </div>
+          <div class="visual-card">
+            <div class="emoji">🚗</div>
+            <div class="label">汽车</div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>8-10 分钟：身边 AI 过渡</strong>
+        说：“刚才视频告诉我们什么是 AI。现在我们看看，AI 藏在小朋友熟悉的地方。”
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="pink">
+      <div class="slide-inner two-layout">
+        <div class="title-stack">
+          <h2>会回答</h2>
+          <p class="short-line">妈妈手机里的豆包</p>
+        </div>
+        <div class="visual center-layout" aria-hidden="true">
+          <div class="phone">
+            <div class="bubble">讲个故事</div>
+            <div class="bubble answer">好的呀</div>
+            <div class="bubble">画一只小猫</div>
+            <div class="bubble answer">我来帮你</div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>10-12 分钟：豆包</strong>
+        讲法：“豆包像一个会聊天的小助手。我们问它问题，它可以回答，也可以讲故事、帮忙想办法。”
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="blue">
+      <div class="slide-inner two-layout">
+        <div class="visual center-layout" aria-hidden="true">
+          <div class="speaker"></div>
+        </div>
+        <div class="title-stack">
+          <h2>会听话</h2>
+          <p class="short-line">家里的小爱同学</p>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>12-14 分钟：小爱同学</strong>
+        讲法：“我们说，小爱同学，放一首儿歌。它先听见声音，再判断我们想做什么，最后帮我们播放。”
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="yellow">
+      <div class="slide-inner two-layout">
+        <div class="title-stack">
+          <h2>会帮忙</h2>
+          <p class="short-line">爸爸车上的小艺</p>
+        </div>
+        <div class="car-scene" aria-hidden="true">
+          <div class="route">➤</div>
+          <div class="car-top"></div>
+          <div class="car-body"></div>
+          <div class="wheel left"></div>
+          <div class="wheel right"></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>14-16 分钟：车载助手</strong>
+        讲法：“爸爸妈妈开车时，可以说导航去哪里、播放音乐。AI 可以帮忙，但安全还要靠大人认真看路。”
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="green">
+      <div class="slide-inner center-layout">
+        <h2>AI 的本领</h2>
+        <div class="skill-grid">
+          <div class="skill"><div class="icon">👂</div><div class="word">听</div></div>
+          <div class="skill"><div class="icon">👀</div><div class="word">看</div></div>
+          <div class="skill"><div class="icon">💬</div><div class="word">说</div></div>
+          <div class="skill"><div class="icon">🧩</div><div class="word">帮</div></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>16-18 分钟：四个本领</strong>
+        让孩子一起读：听、看、说、帮。这里不要展开技术，保持节奏。
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="blue">
+      <div class="slide-inner center-layout">
+        <h2>我来做动作</h2>
+        <div class="gesture-row">
+          <div class="gesture"><div class="hand">🖐️</div><div class="label">张手</div></div>
+          <div class="gesture"><div class="hand">✊</div><div class="label">握拳</div></div>
+          <div class="gesture"><div class="hand">✌️</div><div class="label">比耶</div></div>
+          <div class="gesture"><div class="hand">👋</div><div class="label">挥手</div></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>18-23 分钟：身体互动</strong>
+        全班一起做动作。问：“老师为什么知道你们在张手、握拳？”引导孩子说：因为老师看见了。再接到 AI 有时也能通过摄像头看动作。
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="pink">
+      <div class="slide-inner two-layout">
+        <div class="title-stack">
+          <h2>AI 也会创造</h2>
+          <p class="short-line">故事、图片、小游戏</p>
+        </div>
+        <div class="balloon-scene" aria-hidden="true">
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="game-hand">🖐️</div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>23-25 分钟：抓气球定位</strong>
+        关键话术：“接下来这个抓气球小游戏，是 AI 帮忙创造出来的。AI 不只是会回答问题，还可以帮大人做故事、图片、小游戏。”
+      </aside>
+    </section>
+
+    <section class="slide play-slide" data-tone="yellow">
+      <div class="slide-inner center-layout">
+        <div class="balloon-scene" aria-hidden="true">
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="balloon"></div>
+          <div class="game-hand">✊</div>
+        </div>
+        <h2>一起玩！</h2>
+        <div class="cta-row">
+          <a class="action" href="http://localhost:8124/" target="_blank" rel="noreferrer">打开游戏</a>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>25-33 分钟：游戏互动</strong>
+        建议 6 组，每组选 1-2 个代表，其他孩子当观察员。每轮 30 秒，简单难度，全屏。重点不是比分，是气氛和“AI 可以帮我们创造互动游戏”。
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="blue">
+      <div class="slide-inner center-layout">
+        <h2>AI 也会错</h2>
+        <div class="mistake-scene">
+          <div class="mistake"><div class="icon">🌙</div><div class="label">太暗</div></div>
+          <div class="mistake"><div class="icon">📣</div><div class="label">太吵</div></div>
+          <div class="mistake"><div class="icon">❓</div><div class="label">答错</div></div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>33-36 分钟：安全意识</strong>
+        问：“如果太暗，AI 会不会看错？如果大家一起喊，小爱会不会听错？”总结：AI 很厉害，但重要事情要让大人一起判断。
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="green">
+      <div class="slide-inner center-layout">
+        <h2>现在你知道了吗？</h2>
+        <div class="buckets">
+          <div class="bucket">
+            <div class="icon">👂</div>
+            <div class="label">会听</div>
+            <div class="examples"><span>小爱同学</span><span>小艺</span></div>
+          </div>
+          <div class="bucket">
+            <div class="icon">👀</div>
+            <div class="label">会看</div>
+            <div class="examples"><span>摄像头</span><span>拍照识别</span></div>
+          </div>
+          <div class="bucket">
+            <div class="icon">💬</div>
+            <div class="label">会回答</div>
+            <div class="examples"><span>豆包</span><span>手机助手</span></div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        <strong>36-39 分钟：回到开头问题</strong>
+        再问：“现在你知道身边有哪些 AI 了吗？”让孩子举手回答，再帮他们归类到会听、会看、会回答。
+      </aside>
+    </section>
+
+    <section class="slide" data-tone="yellow">
+      <div class="slide-inner center-layout">
+        <h2>AI 在身边</h2>
+        <div class="final-grid" aria-hidden="true">
+          <div class="final-icon">📱</div>
+          <div class="final-icon">🔊</div>
+          <div class="final-icon">🚗</div>
+          <div class="final-icon">🎈</div>
+        </div>
+        <p class="short-line">听、看、回答、帮忙</p>
+      </div>
+      <aside class="notes">
+        <strong>39-40 分钟：全班总结</strong>
+        带读：“AI 可以听，可以看，可以回答，也可以帮我们创造好玩的东西。但是 AI 也会出错，重要事情要问大人。”
+      </aside>
+    </section>
+  </main>
+
+  <div class="topbar" aria-hidden="true">
+    <div class="progress"><span id="progressBar"></span></div>
+    <div class="counter" id="counter">1 / 14</div>
+  </div>
+
+  <div class="controls" aria-label="翻页控制">
+    <button type="button" id="prevBtn" title="上一页">‹</button>
+    <button type="button" id="nextBtn" title="下一页">›</button>
+    <button type="button" id="notesBtn" title="教师提示">?</button>
+    <button type="button" id="fullBtn" title="全屏">⛶</button>
+  </div>
+
+  <div class="notes-panel" id="notesPanel"></div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progressBar = document.getElementById("progressBar");
+    const counter = document.getElementById("counter");
+    const notesPanel = document.getElementById("notesPanel");
+    let current = 0;
+
+    async function chooseVideoSource() {
+      const localVideo = document.getElementById("localAiVideo");
+      const remoteVideo = document.getElementById("remoteAiVideo");
+      const source = localVideo?.querySelector("source");
+      if (!localVideo || !remoteVideo || !source) return;
+
+      try {
+        const response = await fetch(source.getAttribute("src"), { method: "HEAD" });
+        if (!response.ok) throw new Error("local video missing");
+        localVideo.hidden = false;
+        remoteVideo.hidden = true;
+      } catch (error) {
+        localVideo.hidden = true;
+        remoteVideo.hidden = false;
+      }
+    }
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("is-active", i === current);
+        const video = slide.querySelector("video");
+        if (video && i !== current) video.pause();
+      });
+
+      const progress = ((current + 1) / slides.length) * 100;
+      progressBar.style.width = `${progress}%`;
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      updateNotes();
+      history.replaceState(null, "", `#${current + 1}`);
+    }
+
+    function updateNotes() {
+      const activeNotes = slides[current].querySelector(".notes");
+      notesPanel.innerHTML = activeNotes ? activeNotes.innerHTML : "";
+    }
+
+    function isTypingTarget(target) {
+      return ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) || target.isContentEditable;
+    }
+
+    document.getElementById("prevBtn").addEventListener("click", () => showSlide(current - 1));
+    document.getElementById("nextBtn").addEventListener("click", () => showSlide(current + 1));
+    document.getElementById("notesBtn").addEventListener("click", () => {
+      notesPanel.classList.toggle("open");
+      updateNotes();
+    });
+    document.getElementById("fullBtn").addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (isTypingTarget(event.target)) return;
+      if (event.code === "ArrowRight" || event.code === "PageDown") {
+        event.preventDefault();
+        showSlide(current + 1);
+      }
+      if (event.code === "ArrowLeft" || event.code === "PageUp") {
+        event.preventDefault();
+        showSlide(current - 1);
+      }
+      if (event.code === "KeyN") {
+        notesPanel.classList.toggle("open");
+        updateNotes();
+      }
+      if (event.code === "KeyF") {
+        document.getElementById("fullBtn").click();
+      }
+    });
+
+    const hashIndex = Number(location.hash.replace("#", "")) - 1;
+    chooseVideoSource();
+    showSlide(Number.isFinite(hashIndex) ? hashIndex : 0);
+  </script>
+</body>
+</html>
