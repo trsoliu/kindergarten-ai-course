@@ -49,6 +49,10 @@ https://trsoliu.github.io/gesture-balloon-game/
 
 公开发布到 GitHub Pages 时，仓库不提交第三方 MP4 文件，网页会自动切换为原视频的 YouTube 嵌入播放。
 
+## 图片素材
+
+生活场景图为 AI 生成后放入 `assets/`；豆包图标来自豆包官网公开 favicon 资源，用于课堂识别。
+
 ## GitHub Pages
 
 这是纯静态网站，上传到 GitHub 后可以直接用 GitHub Pages 从 `main` 分支根目录发布。

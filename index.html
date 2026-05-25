@@ -265,6 +265,165 @@
       box-shadow: var(--shadow);
     }
 
+    .scene-slide {
+      padding: 0;
+      background: #fff8ee;
+      overflow: hidden;
+    }
+
+    .scene-slide::before {
+      display: none;
+    }
+
+    .scene-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .scene-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255, 250, 241, 0.96) 0%, rgba(255, 250, 241, 0.78) 28%, rgba(255, 250, 241, 0.08) 58%, rgba(255, 250, 241, 0) 100%),
+        linear-gradient(0deg, rgba(23, 50, 77, 0.12), rgba(23, 50, 77, 0));
+    }
+
+    .scene-vignette.right {
+      background:
+        linear-gradient(270deg, rgba(255, 250, 241, 0.96) 0%, rgba(255, 250, 241, 0.8) 30%, rgba(255, 250, 241, 0.08) 58%, rgba(255, 250, 241, 0) 100%),
+        linear-gradient(0deg, rgba(23, 50, 77, 0.12), rgba(23, 50, 77, 0));
+    }
+
+    .scene-content {
+      position: relative;
+      z-index: 2;
+      width: min(520px, 48vw);
+      margin-left: clamp(34px, 7vw, 96px);
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      min-height: 100svh;
+      padding-top: 36px;
+    }
+
+    .scene-content.right {
+      margin-left: auto;
+      margin-right: clamp(34px, 7vw, 96px);
+      text-align: right;
+      justify-items: end;
+    }
+
+    .scene-title {
+      font-size: clamp(64px, 8.6vw, 128px);
+      line-height: 1.02;
+      margin: 0;
+      max-width: 6em;
+    }
+
+    .scene-kicker {
+      color: var(--soft-ink);
+      font-size: clamp(30px, 4vw, 58px);
+      line-height: 1.12;
+      font-weight: 1000;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 68px;
+      padding: 10px 18px;
+      width: fit-content;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 5px solid rgba(23, 50, 77, 0.08);
+      box-shadow: 0 18px 40px rgba(34, 49, 72, 0.16);
+      color: var(--ink);
+      font-size: clamp(24px, 3vw, 42px);
+      font-weight: 1000;
+    }
+
+    .brand-badge img {
+      width: clamp(42px, 5vw, 66px);
+      height: clamp(42px, 5vw, 66px);
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .brand-dot {
+      display: grid;
+      place-items: center;
+      width: clamp(42px, 5vw, 66px);
+      aspect-ratio: 1;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff7a45, #ffb000);
+      font-size: clamp(18px, 2.2vw, 30px);
+      font-weight: 1000;
+    }
+
+    .brand-dot.celia {
+      background: linear-gradient(135deg, #e33a3a, #ff7a72);
+    }
+
+    .scene-caption {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .tiny-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--soft-ink);
+      font-size: clamp(18px, 2vw, 25px);
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(34, 49, 72, 0.12);
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(16px, 2vw, 28px);
+      width: 100%;
+    }
+
+    .photo-tile {
+      position: relative;
+      overflow: hidden;
+      min-height: min(58svh, 430px);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      border: 8px solid rgba(255, 255, 255, 0.86);
+      background: #fff;
+    }
+
+    .photo-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.02);
+    }
+
+    .photo-tile .label {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+    }
+
     .phone {
       width: min(330px, 48vw);
       aspect-ratio: 9 / 16;
@@ -832,7 +991,9 @@
     .is-active .bucket,
     .is-active .mistake,
     .is-active .video-shell,
-    .is-active .balloon-scene {
+    .is-active .balloon-scene,
+    .is-active .photo-tile,
+    .is-active .scene-content {
       animation: rise 560ms ease both;
     }
 
@@ -881,6 +1042,46 @@
         width: min(260px, 70vw);
       }
 
+      .scene-slide {
+        padding: 0;
+      }
+
+      .scene-photo {
+        height: 62%;
+        bottom: auto;
+      }
+
+      .scene-vignette,
+      .scene-vignette.right {
+        background: linear-gradient(0deg, rgba(255, 250, 241, 1) 0%, rgba(255, 250, 241, 0.95) 36%, rgba(255, 250, 241, 0.1) 72%, rgba(255, 250, 241, 0) 100%);
+      }
+
+      .scene-content,
+      .scene-content.right {
+        width: auto;
+        min-height: 100svh;
+        margin: 0;
+        padding: 48svh 22px 76px;
+        text-align: left;
+        justify-items: start;
+      }
+
+      .scene-title {
+        font-size: clamp(48px, 15vw, 78px);
+      }
+
+      .scene-kicker {
+        font-size: clamp(28px, 8vw, 44px);
+      }
+
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-tile {
+        min-height: 240px;
+      }
+
       .topbar {
         top: 10px;
         left: 12px;
@@ -911,17 +1112,13 @@
 </head>
 <body>
   <main class="deck" aria-live="polite">
-    <section class="slide is-active" data-tone="yellow">
-      <div class="slide-inner hero-layout">
-        <div class="title-stack">
-          <div class="eyebrow">40 分钟分享课</div>
-          <h1>AI 小助手</h1>
-          <p class="short-line">就在我们身边</p>
-        </div>
-        <div class="visual" aria-hidden="true">
-          <div class="blob sun"></div>
-          <div class="emoji">🤖</div>
-        </div>
+    <section class="slide scene-slide is-active" data-tone="yellow">
+      <img class="scene-photo" src="assets/scene-doubao-phone.png" alt="妈妈和孩子一起看手机里的 AI 助手">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="eyebrow">40 分钟分享课</div>
+        <h1 class="scene-title">AI 小助手</h1>
+        <div class="scene-kicker">就在我们身边</div>
       </div>
       <aside class="notes">
         <strong>开场</strong>
@@ -932,11 +1129,19 @@
     <section class="slide" data-tone="blue">
       <div class="slide-inner center-layout">
         <h2>你见过 AI 吗？</h2>
-        <div class="emoji-row" aria-hidden="true">
-          <div class="emoji-badge">🙋</div>
-          <div class="emoji-badge">📱</div>
-          <div class="emoji-badge">🔊</div>
-          <div class="emoji-badge">🚗</div>
+        <div class="photo-grid">
+          <div class="photo-tile">
+            <img src="assets/scene-doubao-phone.png" alt="手机里的 AI 助手">
+            <div class="label">妈妈手机</div>
+          </div>
+          <div class="photo-tile">
+            <img src="assets/scene-smart-speaker.png" alt="家里的智能音箱">
+            <div class="label">家里音箱</div>
+          </div>
+          <div class="photo-tile">
+            <img src="assets/scene-car-assistant.png" alt="车里的语音助手">
+            <div class="label">爸爸车上</div>
+          </div>
         </div>
       </div>
       <aside class="notes">
@@ -972,17 +1177,17 @@
     <section class="slide" data-tone="yellow">
       <div class="slide-inner center-layout">
         <h2>AI 在哪里？</h2>
-        <div class="three-layout" style="width: 100%;">
-          <div class="visual-card">
-            <div class="emoji">📱</div>
+        <div class="photo-grid">
+          <div class="photo-tile">
+            <img src="assets/scene-doubao-phone.png" alt="妈妈和孩子一起看手机里的 AI 助手">
             <div class="label">手机</div>
           </div>
-          <div class="visual-card">
-            <div class="emoji">🔊</div>
+          <div class="photo-tile">
+            <img src="assets/scene-smart-speaker.png" alt="孩子对客厅里的智能音箱说话">
             <div class="label">音箱</div>
           </div>
-          <div class="visual-card">
-            <div class="emoji">🚗</div>
+          <div class="photo-tile">
+            <img src="assets/scene-car-assistant.png" alt="汽车中控屏上的语音助手和导航">
             <div class="label">汽车</div>
           </div>
         </div>
@@ -993,19 +1198,20 @@
       </aside>
     </section>
 
-    <section class="slide" data-tone="pink">
-      <div class="slide-inner two-layout">
-        <div class="title-stack">
-          <h2>会回答</h2>
-          <p class="short-line">妈妈手机里的豆包</p>
+    <section class="slide scene-slide" data-tone="pink">
+      <img class="scene-photo" src="assets/scene-doubao-phone.png" alt="妈妈和孩子一起看手机里的豆包 AI 助手">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="brand-badge">
+          <img src="assets/doubao-icon.png" alt="豆包图标">
+          <span>豆包</span>
         </div>
-        <div class="visual center-layout" aria-hidden="true">
-          <div class="phone">
-            <div class="bubble">讲个故事</div>
-            <div class="bubble answer">好的呀</div>
-            <div class="bubble">画一只小猫</div>
-            <div class="bubble answer">我来帮你</div>
-          </div>
+        <h2 class="scene-title">会回答</h2>
+        <div class="scene-kicker">妈妈手机里</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">问问题</span>
+          <span class="tiny-chip">讲故事</span>
+          <span class="tiny-chip">想办法</span>
         </div>
       </div>
       <aside class="notes">
@@ -1014,14 +1220,19 @@
       </aside>
     </section>
 
-    <section class="slide" data-tone="blue">
-      <div class="slide-inner two-layout">
-        <div class="visual center-layout" aria-hidden="true">
-          <div class="speaker"></div>
+    <section class="slide scene-slide" data-tone="blue">
+      <img class="scene-photo" src="assets/scene-smart-speaker.png" alt="孩子对家里的智能音箱说话">
+      <div class="scene-vignette right"></div>
+      <div class="scene-content right">
+        <div class="brand-badge">
+          <span class="brand-dot">米</span>
+          <span>小爱同学</span>
         </div>
-        <div class="title-stack">
-          <h2>会听话</h2>
-          <p class="short-line">家里的小爱同学</p>
+        <h2 class="scene-title">会听话</h2>
+        <div class="scene-kicker">家里的音箱</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">放儿歌</span>
+          <span class="tiny-chip">听口令</span>
         </div>
       </div>
       <aside class="notes">
@@ -1030,18 +1241,20 @@
       </aside>
     </section>
 
-    <section class="slide" data-tone="yellow">
-      <div class="slide-inner two-layout">
-        <div class="title-stack">
-          <h2>会帮忙</h2>
-          <p class="short-line">爸爸车上的小艺</p>
+    <section class="slide scene-slide" data-tone="yellow">
+      <img class="scene-photo" src="assets/scene-car-assistant.png" alt="汽车中控屏上的导航和语音助手">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="brand-badge">
+          <span class="brand-dot celia">艺</span>
+          <span>小艺</span>
         </div>
-        <div class="car-scene" aria-hidden="true">
-          <div class="route">➤</div>
-          <div class="car-top"></div>
-          <div class="car-body"></div>
-          <div class="wheel left"></div>
-          <div class="wheel right"></div>
+        <h2 class="scene-title">会帮忙</h2>
+        <div class="scene-kicker">爸爸车上</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">导航</span>
+          <span class="tiny-chip">放音乐</span>
+          <span class="tiny-chip">提醒安全</span>
         </div>
       </div>
       <aside class="notes">
@@ -1082,20 +1295,16 @@
       </aside>
     </section>
 
-    <section class="slide" data-tone="pink">
-      <div class="slide-inner two-layout">
-        <div class="title-stack">
-          <h2>AI 也会创造</h2>
-          <p class="short-line">故事、图片、小游戏</p>
+    <section class="slide scene-slide" data-tone="pink">
+      <img class="scene-photo" src="assets/scene-balloon-game.png" alt="幼儿园教室里孩子们玩手势抓气球游戏">
+      <div class="scene-vignette right"></div>
+      <div class="scene-content right">
+        <div class="brand-badge">
+          <span class="brand-dot">AI</span>
+          <span>创造</span>
         </div>
-        <div class="balloon-scene" aria-hidden="true">
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="game-hand">🖐️</div>
-        </div>
+        <h2 class="scene-title">做游戏</h2>
+        <div class="scene-kicker">故事、图片、小游戏</div>
       </div>
       <aside class="notes">
         <strong>23-25 分钟：抓气球定位</strong>
@@ -1103,17 +1312,15 @@
       </aside>
     </section>
 
-    <section class="slide play-slide" data-tone="yellow">
-      <div class="slide-inner center-layout">
-        <div class="balloon-scene" aria-hidden="true">
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="balloon"></div>
-          <div class="game-hand">✊</div>
+    <section class="slide scene-slide play-slide" data-tone="yellow">
+      <img class="scene-photo" src="assets/scene-balloon-game.png" alt="孩子们在教室里玩气球互动游戏">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="brand-badge">
+          <span class="brand-dot">🎈</span>
+          <span>抓气球</span>
         </div>
-        <h2>一起玩！</h2>
+        <h2 class="scene-title">一起玩！</h2>
         <div class="cta-row">
           <a
             id="gameLink"
