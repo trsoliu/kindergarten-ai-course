@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>认识人工智能：AI 小助手就在身边</title>
+  <link rel="icon" href="assets/site-icon.svg" type="image/svg+xml">
   <style>
     :root {
       --ink: #17324d;
@@ -266,6 +267,13 @@
     }
 
     .scene-slide {
+      --copy-zone: 40%;
+      --media-zone: 58%;
+      --copy-width: 560px;
+      --copy-gutter: clamp(34px, 5vw, 76px);
+      --fade-mid: calc(var(--copy-zone) + 8%);
+      --fade-end: calc(var(--copy-zone) + 18%);
+      display: block;
       padding: 0;
       background: #fff8ee;
       overflow: hidden;
@@ -277,11 +285,18 @@
 
     .scene-photo {
       position: absolute;
-      inset: 0;
-      width: 100%;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--media-zone);
       height: 100%;
       object-fit: cover;
       z-index: 0;
+    }
+
+    .scene-slide.media-left .scene-photo {
+      right: auto;
+      left: 0;
     }
 
     .scene-vignette {
@@ -290,22 +305,23 @@
       z-index: 1;
       pointer-events: none;
       background:
-        linear-gradient(90deg, rgba(255, 250, 241, 0.96) 0%, rgba(255, 250, 241, 0.78) 28%, rgba(255, 250, 241, 0.08) 58%, rgba(255, 250, 241, 0) 100%),
+        linear-gradient(90deg, rgba(255, 250, 241, 0.9) 0%, rgba(255, 250, 241, 0.76) calc(var(--copy-zone) - 8%), rgba(255, 250, 241, 0.44) var(--fade-mid), rgba(255, 250, 241, 0) var(--fade-end)),
         linear-gradient(0deg, rgba(23, 50, 77, 0.12), rgba(23, 50, 77, 0));
     }
 
     .scene-vignette.right {
       background:
-        linear-gradient(270deg, rgba(255, 250, 241, 0.96) 0%, rgba(255, 250, 241, 0.8) 30%, rgba(255, 250, 241, 0.08) 58%, rgba(255, 250, 241, 0) 100%),
+        linear-gradient(270deg, rgba(255, 250, 241, 0.9) 0%, rgba(255, 250, 241, 0.76) calc(var(--copy-zone) - 8%), rgba(255, 250, 241, 0.44) var(--fade-mid), rgba(255, 250, 241, 0) var(--fade-end)),
         linear-gradient(0deg, rgba(23, 50, 77, 0.12), rgba(23, 50, 77, 0));
     }
 
     .scene-content {
       position: relative;
       z-index: 2;
-      width: min(520px, 48vw);
-      margin-left: clamp(34px, 7vw, 96px);
+      width: min(var(--copy-width), calc(var(--copy-zone) - var(--copy-gutter) - 20px));
+      margin-left: var(--copy-gutter);
       display: grid;
+      justify-self: start;
       align-content: center;
       gap: 18px;
       min-height: 100svh;
@@ -314,16 +330,57 @@
 
     .scene-content.right {
       margin-left: auto;
-      margin-right: clamp(34px, 7vw, 96px);
+      margin-right: var(--copy-gutter);
       text-align: right;
+      justify-self: end;
       justify-items: end;
     }
 
+    .scene-slide.compact-copy {
+      --copy-zone: 30%;
+      --media-zone: 100%;
+      --copy-width: 410px;
+      --copy-gutter: clamp(38px, 4.2vw, 86px);
+      --fade-mid: calc(var(--copy-zone) + 4%);
+      --fade-end: calc(var(--copy-zone) + 13%);
+    }
+
+    .scene-slide.intro-slide {
+      --copy-zone: 38%;
+      --copy-width: 560px;
+      --copy-gutter: clamp(46px, 4.8vw, 92px);
+      --fade-mid: 47%;
+      --fade-end: 60%;
+    }
+
+    .scene-slide.compact-copy.media-left .scene-content.right {
+      text-align: left;
+      justify-items: start;
+    }
+
+    .scene-slide.compact-copy.media-left .scene-content.right .scene-caption {
+      justify-content: flex-start;
+    }
+
+    .scene-slide.photo-zoom .scene-photo {
+      transform: scale(1.08);
+    }
+
+    .intro-slide .scene-title {
+      font-size: clamp(64px, 7vw, 132px);
+      max-width: 5em;
+    }
+
+    .compact-copy:not(.intro-slide) .scene-title {
+      font-size: clamp(54px, 6.6vw, 108px);
+    }
+
     .scene-title {
-      font-size: clamp(64px, 8.6vw, 128px);
+      font-size: clamp(58px, 7.2vw, 112px);
       line-height: 1.02;
       margin: 0;
-      max-width: 6em;
+      max-width: 4.8em;
+      text-wrap: balance;
     }
 
     .scene-kicker {
@@ -356,20 +413,37 @@
       object-fit: cover;
     }
 
-    .brand-dot {
-      display: grid;
-      place-items: center;
-      width: clamp(42px, 5vw, 66px);
-      aspect-ratio: 1;
-      border-radius: 8px;
-      color: #fff;
-      background: linear-gradient(135deg, #ff7a45, #ffb000);
-      font-size: clamp(18px, 2.2vw, 30px);
+    .brand-badge.text-only {
+      padding-inline: 22px;
+    }
+
+    .topic-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      width: fit-content;
+      padding: 9px 18px 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 4px solid rgba(23, 50, 77, 0.08);
+      box-shadow: 0 16px 34px rgba(34, 49, 72, 0.14);
+      color: var(--ink);
+      font-size: clamp(22px, 2.5vw, 34px);
       font-weight: 1000;
     }
 
-    .brand-dot.celia {
-      background: linear-gradient(135deg, #e33a3a, #ff7a72);
+    .topic-mark {
+      display: grid;
+      place-items: center;
+      width: clamp(38px, 4.4vw, 56px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      color: #17324d;
+      background: rgba(255, 176, 0, 0.22);
+      border: 3px solid rgba(255, 176, 0, 0.36);
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 1000;
     }
 
     .scene-caption {
@@ -378,6 +452,10 @@
       gap: 10px;
       align-items: center;
       margin-top: 6px;
+    }
+
+    .scene-content.right .scene-caption {
+      justify-content: flex-end;
     }
 
     .tiny-chip {
@@ -400,6 +478,19 @@
       width: 100%;
     }
 
+    .gallery-layout {
+      width: min(1500px, 94vw);
+      gap: clamp(18px, 3vw, 38px);
+    }
+
+    .gallery-layout h2 {
+      font-size: clamp(46px, 5.4vw, 88px);
+    }
+
+    .gallery-layout .photo-grid {
+      gap: clamp(14px, 1.6vw, 24px);
+    }
+
     .photo-tile {
       position: relative;
       overflow: hidden;
@@ -410,12 +501,39 @@
       background: #fff;
     }
 
+    .gallery-layout .photo-tile {
+      min-height: 0;
+      aspect-ratio: 16 / 10;
+    }
+
     .photo-tile img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
       transform: scale(1.02);
+    }
+
+    .gallery-layout .photo-tile img {
+      transform: scale(1.01);
+    }
+
+    .photo-tile.focus-phone img {
+      object-position: 64% center;
+    }
+
+    .photo-tile.focus-speaker img {
+      object-position: 42% center;
+    }
+
+    .photo-tile.focus-car img {
+      object-position: 56% center;
+    }
+
+    @media (min-width: 841px) {
+      .compact-copy .scene-title {
+        white-space: nowrap;
+      }
     }
 
     .photo-tile .label {
@@ -871,24 +989,61 @@
 
     .controls {
       position: fixed;
-      right: 18px;
-      bottom: 16px;
+      left: 50%;
+      bottom: clamp(18px, 3.2svh, 34px);
+      transform: translateX(-50%);
       z-index: 30;
       display: flex;
-      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      max-width: calc(100vw - 32px);
     }
 
     .controls button {
-      width: 48px;
-      height: 48px;
+      display: inline-grid;
+      place-items: center;
+      width: 60px;
+      height: 60px;
+      padding: 0;
       border: 0;
       border-radius: 50%;
       color: var(--ink);
       background: rgba(255, 255, 255, 0.86);
       box-shadow: 0 10px 24px rgba(34, 49, 72, 0.16);
+      appearance: none;
       cursor: pointer;
-      font-size: 23px;
-      font-weight: 1000;
+      line-height: 1;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .controls button:hover {
+      transform: translateY(-2px);
+      background: #fff;
+      box-shadow: 0 16px 34px rgba(34, 49, 72, 0.2);
+    }
+
+    .controls button:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    .controls button:focus-visible {
+      outline: 0;
+      background: #fff;
+      box-shadow: 0 12px 28px rgba(34, 49, 72, 0.18), 0 0 0 5px rgba(255, 122, 114, 0.34);
+    }
+
+    .control-icon {
+      display: block;
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 3.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
     }
 
     .notes-panel {
@@ -919,6 +1074,14 @@
       display: block;
       margin-bottom: 6px;
       font-size: 20px;
+    }
+
+    .notes-panel p {
+      margin: 0 0 8px;
+    }
+
+    .notes-panel p:last-child {
+      margin-bottom: 0;
     }
 
     .notes {
@@ -1047,8 +1210,16 @@
       }
 
       .scene-photo {
+        left: 0;
+        right: 0;
+        width: 100%;
         height: 62%;
         bottom: auto;
+      }
+
+      .scene-slide.media-left .scene-photo {
+        left: 0;
+        right: 0;
       }
 
       .scene-vignette,
@@ -1064,6 +1235,21 @@
         padding: 48svh 22px 76px;
         text-align: left;
         justify-items: start;
+      }
+
+      .controls {
+        bottom: 14px;
+        gap: 10px;
+      }
+
+      .controls button {
+        width: 54px;
+        height: 54px;
+      }
+
+      .control-icon {
+        width: 30px;
+        height: 30px;
       }
 
       .scene-title {
@@ -1112,7 +1298,7 @@
 </head>
 <body>
   <main class="deck" aria-live="polite">
-    <section class="slide scene-slide is-active" data-tone="yellow">
+    <section class="slide scene-slide compact-copy intro-slide is-active" data-tone="yellow">
       <img class="scene-photo" src="assets/scene-doubao-phone.png" alt="妈妈和孩子一起看手机里的 AI 助手">
       <div class="scene-vignette"></div>
       <div class="scene-content">
@@ -1122,23 +1308,24 @@
       </div>
       <aside class="notes">
         <strong>开场</strong>
-        语气轻松一点：“今天我们认识一个新朋友，叫 AI 小助手。它不是魔法，也不只在电视里，它可能就在我们家里。”
+        <p>语气轻松一点：“今天我们认识一个新朋友，叫 AI 小助手。它不是魔法，也不只在电视里，它可能就在我们家里。”</p>
+        <p>不要急着解释概念，先让孩子看图：妈妈手机、家里、孩子，这些都是他们熟悉的生活场景。</p>
       </aside>
     </section>
 
     <section class="slide" data-tone="blue">
-      <div class="slide-inner center-layout">
+      <div class="slide-inner center-layout gallery-layout">
         <h2>你见过 AI 吗？</h2>
         <div class="photo-grid">
-          <div class="photo-tile">
+          <div class="photo-tile focus-phone">
             <img src="assets/scene-doubao-phone.png" alt="手机里的 AI 助手">
             <div class="label">妈妈手机</div>
           </div>
-          <div class="photo-tile">
+          <div class="photo-tile focus-speaker">
             <img src="assets/scene-smart-speaker.png" alt="家里的智能音箱">
             <div class="label">家里音箱</div>
           </div>
-          <div class="photo-tile">
+          <div class="photo-tile focus-car">
             <img src="assets/scene-car-assistant.png" alt="车里的语音助手">
             <div class="label">爸爸车上</div>
           </div>
@@ -1146,7 +1333,8 @@
       </div>
       <aside class="notes">
         <strong>0-3 分钟：举手开场</strong>
-        问：“你身边有没有 AI？”孩子说什么先接住，不急着纠正。可以把答案口头归类成手机、音箱、汽车、机器人。
+        <p>问：“你身边有没有 AI？”请孩子举手回答。孩子说电话手表、手机、机器人、车、音箱，都先接住。</p>
+        <p>老师口头归类：“有的 AI 在手机里，有的 AI 在家里，有的 AI 在车上。我们等下再看看它们会做什么。”</p>
       </aside>
     </section>
 
@@ -1170,23 +1358,24 @@
       </div>
       <aside class="notes">
         <strong>3-8 分钟：视频解释什么是 AI</strong>
-        视频已经负责概念解释。看完只问：“AI 可以做什么？”“它是在听、看，还是回答？”
+        <p>视频已经负责“什么是 AI”的基础解释。播放前提醒：“等下请你找一找，AI 会哪些本领。”</p>
+        <p>看完只问两个短问题：“AI 可以做什么？”“它是在听、看，还是回答？”孩子答到一个就进入下一页。</p>
       </aside>
     </section>
 
     <section class="slide" data-tone="yellow">
-      <div class="slide-inner center-layout">
+      <div class="slide-inner center-layout gallery-layout">
         <h2>AI 在哪里？</h2>
         <div class="photo-grid">
-          <div class="photo-tile">
+          <div class="photo-tile focus-phone">
             <img src="assets/scene-doubao-phone.png" alt="妈妈和孩子一起看手机里的 AI 助手">
             <div class="label">手机</div>
           </div>
-          <div class="photo-tile">
+          <div class="photo-tile focus-speaker">
             <img src="assets/scene-smart-speaker.png" alt="孩子对客厅里的智能音箱说话">
             <div class="label">音箱</div>
           </div>
-          <div class="photo-tile">
+          <div class="photo-tile focus-car">
             <img src="assets/scene-car-assistant.png" alt="汽车中控屏上的语音助手和导航">
             <div class="label">汽车</div>
           </div>
@@ -1194,11 +1383,12 @@
       </div>
       <aside class="notes">
         <strong>8-10 分钟：身边 AI 过渡</strong>
-        说：“刚才视频告诉我们什么是 AI。现在我们看看，AI 藏在小朋友熟悉的地方。”
+        <p>说：“刚才视频告诉我们什么是 AI。现在我们看看，AI 藏在小朋友熟悉的地方。”</p>
+        <p>可以指图提问：“这是谁的手机？”“家里有没有这样的音箱？”“车上导航是谁在帮忙？”</p>
       </aside>
     </section>
 
-    <section class="slide scene-slide" data-tone="pink">
+    <section class="slide scene-slide compact-copy" data-tone="pink">
       <img class="scene-photo" src="assets/scene-doubao-phone.png" alt="妈妈和孩子一起看手机里的豆包 AI 助手">
       <div class="scene-vignette"></div>
       <div class="scene-content">
@@ -1216,16 +1406,16 @@
       </div>
       <aside class="notes">
         <strong>10-12 分钟：豆包</strong>
-        讲法：“豆包像一个会聊天的小助手。我们问它问题，它可以回答，也可以讲故事、帮忙想办法。”
+        <p>讲法：“豆包像一个会聊天的小助手。我们问它问题，它可以回答，也可以讲故事、帮忙想办法。”</p>
+        <p>可以举幼儿园例子：“比如问它：小兔子为什么爱吃胡萝卜？它会试着讲给我们听。”</p>
       </aside>
     </section>
 
-    <section class="slide scene-slide" data-tone="blue">
+    <section class="slide scene-slide compact-copy media-left" data-tone="blue">
       <img class="scene-photo" src="assets/scene-smart-speaker.png" alt="孩子对家里的智能音箱说话">
       <div class="scene-vignette right"></div>
       <div class="scene-content right">
-        <div class="brand-badge">
-          <span class="brand-dot">米</span>
+        <div class="brand-badge text-only">
           <span>小爱同学</span>
         </div>
         <h2 class="scene-title">会听话</h2>
@@ -1237,16 +1427,16 @@
       </div>
       <aside class="notes">
         <strong>12-14 分钟：小爱同学</strong>
-        讲法：“我们说，小爱同学，放一首儿歌。它先听见声音，再判断我们想做什么，最后帮我们播放。”
+        <p>讲法：“我们说，小爱同学，放一首儿歌。它先听见声音，再判断我们想做什么，最后帮我们播放。”</p>
+        <p>带孩子一起小声说一遍：“小爱同学，播放儿歌。”强调它的第一个本领是“听”。</p>
       </aside>
     </section>
 
-    <section class="slide scene-slide" data-tone="yellow">
+    <section class="slide scene-slide compact-copy" data-tone="yellow">
       <img class="scene-photo" src="assets/scene-car-assistant.png" alt="汽车中控屏上的导航和语音助手">
       <div class="scene-vignette"></div>
       <div class="scene-content">
-        <div class="brand-badge">
-          <span class="brand-dot celia">艺</span>
+        <div class="brand-badge text-only">
           <span>小艺</span>
         </div>
         <h2 class="scene-title">会帮忙</h2>
@@ -1259,48 +1449,65 @@
       </div>
       <aside class="notes">
         <strong>14-16 分钟：车载助手</strong>
-        讲法：“爸爸妈妈开车时，可以说导航去哪里、播放音乐。AI 可以帮忙，但安全还要靠大人认真看路。”
+        <p>讲法：“爸爸妈妈开车时，可以说导航去哪里、播放音乐。AI 可以帮忙，但安全还要靠大人认真看路。”</p>
+        <p>这里顺手埋安全点：“小朋友坐车时不乱按，重要事情让大人来判断。”</p>
       </aside>
     </section>
 
-    <section class="slide" data-tone="green">
-      <div class="slide-inner center-layout">
-        <h2>AI 的本领</h2>
-        <div class="skill-grid">
-          <div class="skill"><div class="icon">👂</div><div class="word">听</div></div>
-          <div class="skill"><div class="icon">👀</div><div class="word">看</div></div>
-          <div class="skill"><div class="icon">💬</div><div class="word">说</div></div>
-          <div class="skill"><div class="icon">🧩</div><div class="word">帮</div></div>
+    <section class="slide scene-slide" data-tone="green">
+      <img class="scene-photo" src="assets/scene-ai-abilities.png" alt="孩子们围着 AI 小助手认识听看说帮四个本领">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="topic-badge">
+          <span class="topic-mark">听</span>
+          <span>本领</span>
+        </div>
+        <h2 class="scene-title">会听<br>会看</h2>
+        <div class="scene-kicker">还会回答和帮忙</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">听声音</span>
+          <span class="tiny-chip">看画面</span>
+          <span class="tiny-chip">说答案</span>
+          <span class="tiny-chip">做事情</span>
         </div>
       </div>
       <aside class="notes">
         <strong>16-18 分钟：四个本领</strong>
-        让孩子一起读：听、看、说、帮。这里不要展开技术，保持节奏。
+        <p>讲法：“AI 像一个会学习的小助手。有时候它用麦克风听，有时候用摄像头看，有时候用文字或声音回答。”</p>
+        <p>让孩子一起读四个词：听、看、回答、帮忙。不要展开技术，保持节奏。</p>
       </aside>
     </section>
 
-    <section class="slide" data-tone="blue">
-      <div class="slide-inner center-layout">
-        <h2>我来做动作</h2>
-        <div class="gesture-row">
-          <div class="gesture"><div class="hand">🖐️</div><div class="label">张手</div></div>
-          <div class="gesture"><div class="hand">✊</div><div class="label">握拳</div></div>
-          <div class="gesture"><div class="hand">✌️</div><div class="label">比耶</div></div>
-          <div class="gesture"><div class="hand">👋</div><div class="label">挥手</div></div>
+    <section class="slide scene-slide" data-tone="blue">
+      <img class="scene-photo" src="assets/scene-gesture-classroom.png" alt="幼儿园老师带孩子做张手握拳等动作">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="topic-badge">
+          <span class="topic-mark">手</span>
+          <span>动作</span>
+        </div>
+        <h2 class="scene-title">我来做动作</h2>
+        <div class="scene-kicker">AI 有时也能看懂</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">张手</span>
+          <span class="tiny-chip">握拳</span>
+          <span class="tiny-chip">比耶</span>
+          <span class="tiny-chip">挥手</span>
         </div>
       </div>
       <aside class="notes">
         <strong>18-23 分钟：身体互动</strong>
-        全班一起做动作。问：“老师为什么知道你们在张手、握拳？”引导孩子说：因为老师看见了。再接到 AI 有时也能通过摄像头看动作。
+        <p>全班一起做动作：张手、握拳、比耶、挥手。老师先做，孩子模仿，再请一排孩子做给大家看。</p>
+        <p>问：“老师为什么知道你们在张手、握拳？”引导孩子说：因为老师看见了。再接到 AI 有时也能通过摄像头看动作。</p>
       </aside>
     </section>
 
-    <section class="slide scene-slide" data-tone="pink">
+    <section class="slide scene-slide compact-copy photo-zoom" data-tone="pink">
       <img class="scene-photo" src="assets/scene-balloon-game.png" alt="幼儿园教室里孩子们玩手势抓气球游戏">
-      <div class="scene-vignette right"></div>
-      <div class="scene-content right">
-        <div class="brand-badge">
-          <span class="brand-dot">AI</span>
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="topic-badge">
+          <span class="topic-mark">做</span>
           <span>创造</span>
         </div>
         <h2 class="scene-title">做游戏</h2>
@@ -1308,16 +1515,17 @@
       </div>
       <aside class="notes">
         <strong>23-25 分钟：抓气球定位</strong>
-        关键话术：“接下来这个抓气球小游戏，是 AI 帮忙创造出来的。AI 不只是会回答问题，还可以帮大人做故事、图片、小游戏。”
+        <p>关键话术：“接下来这个抓气球小游戏，是 AI 帮忙创造出来的。AI 不只是会回答问题，还可以帮大人做故事、图片、小游戏。”</p>
+        <p>不要把游戏讲成核心技术演示，它主要负责把气氛调起来，并让孩子感受到“AI 也能参与创造”。</p>
       </aside>
     </section>
 
-    <section class="slide scene-slide play-slide" data-tone="yellow">
+    <section class="slide scene-slide compact-copy photo-zoom play-slide" data-tone="yellow">
       <img class="scene-photo" src="assets/scene-balloon-game.png" alt="孩子们在教室里玩气球互动游戏">
       <div class="scene-vignette"></div>
       <div class="scene-content">
-        <div class="brand-badge">
-          <span class="brand-dot">🎈</span>
+        <div class="topic-badge">
+          <span class="topic-mark">玩</span>
           <span>抓气球</span>
         </div>
         <h2 class="scene-title">一起玩！</h2>
@@ -1334,66 +1542,79 @@
       </div>
       <aside class="notes">
         <strong>25-33 分钟：游戏互动</strong>
-        建议 6 组，每组选 1-2 个代表，其他孩子当观察员。每轮 30 秒，简单难度，全屏。重点不是比分，是气氛和“AI 可以帮我们创造互动游戏”。
+        <p>建议 6 组，每组选 1-2 个代表，其他孩子当观察员。每轮 30 秒，简单难度，全屏。</p>
+        <p>每轮前提醒：“看清楚气球，伸手抓。”每轮后问一句：“刚才电脑看到了什么？”把答案引回“看动作”。</p>
       </aside>
     </section>
 
-    <section class="slide" data-tone="blue">
-      <div class="slide-inner center-layout">
-        <h2>AI 也会错</h2>
-        <div class="mistake-scene">
-          <div class="mistake"><div class="icon">🌙</div><div class="label">太暗</div></div>
-          <div class="mistake"><div class="icon">📣</div><div class="label">太吵</div></div>
-          <div class="mistake"><div class="icon">❓</div><div class="label">答错</div></div>
+    <section class="slide scene-slide" data-tone="blue">
+      <img class="scene-photo" src="assets/scene-ai-mistakes.png" alt="老师和孩子讨论 AI 在太暗太吵时也可能出错">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="topic-badge">
+          <span class="topic-mark">记</span>
+          <span>要记住</span>
+        </div>
+        <h2 class="scene-title">AI 也会错</h2>
+        <div class="scene-kicker">不是每次都对</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">太暗会看错</span>
+          <span class="tiny-chip">太吵会听错</span>
+          <span class="tiny-chip">问题难会答错</span>
         </div>
       </div>
       <aside class="notes">
         <strong>33-36 分钟：安全意识</strong>
-        问：“如果太暗，AI 会不会看错？如果大家一起喊，小爱会不会听错？”总结：AI 很厉害，但重要事情要让大人一起判断。
+        <p>问：“如果太暗，AI 会不会看错？如果大家一起喊，小爱会不会听错？”让孩子用点头或摇头回应。</p>
+        <p>总结：“AI 很厉害，但不是万能。重要事情，比如过马路、吃药、买东西，一定要问爸爸妈妈和老师。”</p>
       </aside>
     </section>
 
-    <section class="slide" data-tone="green">
-      <div class="slide-inner center-layout">
-        <h2>现在你知道了吗？</h2>
-        <div class="buckets">
-          <div class="bucket">
-            <div class="icon">👂</div>
-            <div class="label">会听</div>
-            <div class="examples"><span>小爱同学</span><span>小艺</span></div>
-          </div>
-          <div class="bucket">
-            <div class="icon">👀</div>
-            <div class="label">会看</div>
-            <div class="examples"><span>摄像头</span><span>拍照识别</span></div>
-          </div>
-          <div class="bucket">
-            <div class="icon">💬</div>
-            <div class="label">会回答</div>
-            <div class="examples"><span>豆包</span><span>手机助手</span></div>
-          </div>
+    <section class="slide scene-slide" data-tone="green">
+      <img class="scene-photo" src="assets/scene-ai-summary.png" alt="老师和孩子一起总结身边的手机音箱汽车和小游戏 AI">
+      <div class="scene-vignette"></div>
+      <div class="scene-content">
+        <div class="topic-badge">
+          <span class="topic-mark">想</span>
+          <span>再想一想</span>
+        </div>
+        <h2 class="scene-title">现在你知道了吗？</h2>
+        <div class="scene-kicker">身边有哪些 AI</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">豆包会回答</span>
+          <span class="tiny-chip">小爱会听</span>
+          <span class="tiny-chip">小艺会帮忙</span>
+          <span class="tiny-chip">游戏会看动作</span>
         </div>
       </div>
       <aside class="notes">
         <strong>36-39 分钟：回到开头问题</strong>
-        再问：“现在你知道身边有哪些 AI 了吗？”让孩子举手回答，再帮他们归类到会听、会看、会回答。
+        <p>再次举手提问：“现在你知道身边有哪些 AI 了吗？”让孩子回答，不必只说课上出现过的，也可以说电话手表、扫地机器人、拍照识别。</p>
+        <p>老师把答案归类：“会回答的，像豆包；会听的，像小爱同学和小艺；会看的，像能识别动作的小游戏。”</p>
       </aside>
     </section>
 
-    <section class="slide" data-tone="yellow">
-      <div class="slide-inner center-layout">
-        <h2>AI 在身边</h2>
-        <div class="final-grid" aria-hidden="true">
-          <div class="final-icon">📱</div>
-          <div class="final-icon">🔊</div>
-          <div class="final-icon">🚗</div>
-          <div class="final-icon">🎈</div>
+    <section class="slide scene-slide media-left" data-tone="yellow">
+      <img class="scene-photo" src="assets/scene-ai-summary.png" alt="幼儿园课堂最后总结 AI 就在手机音箱汽车和游戏里">
+      <div class="scene-vignette right"></div>
+      <div class="scene-content right">
+        <div class="topic-badge">
+          <span class="topic-mark">身</span>
+          <span>在身边</span>
         </div>
-        <p class="short-line">听、看、回答、帮忙</p>
+        <h2 class="scene-title">听 看 回答 帮忙</h2>
+        <div class="scene-kicker">重要事情问大人</div>
+        <div class="scene-caption">
+          <span class="tiny-chip">手机</span>
+          <span class="tiny-chip">音箱</span>
+          <span class="tiny-chip">汽车</span>
+          <span class="tiny-chip">小游戏</span>
+        </div>
       </div>
       <aside class="notes">
         <strong>39-40 分钟：全班总结</strong>
-        带读：“AI 可以听，可以看，可以回答，也可以帮我们创造好玩的东西。但是 AI 也会出错，重要事情要问大人。”
+        <p>带读：“AI 可以听，可以看，可以回答，也可以帮我们创造好玩的东西。”</p>
+        <p>最后一句放慢：“但是 AI 也会出错，重要事情要问大人。”然后感谢孩子：“今天你们都是小小 AI 观察员。”</p>
       </aside>
     </section>
   </main>
@@ -1404,10 +1625,30 @@
   </div>
 
   <div class="controls" aria-label="翻页控制">
-    <button type="button" id="prevBtn" title="上一页">‹</button>
-    <button type="button" id="nextBtn" title="下一页">›</button>
-    <button type="button" id="notesBtn" title="教师提示">?</button>
-    <button type="button" id="fullBtn" title="全屏">⛶</button>
+    <button type="button" id="prevBtn" title="上一页" aria-label="上一页">
+      <svg class="control-icon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </button>
+    <button type="button" id="nextBtn" title="下一页" aria-label="下一页">
+      <svg class="control-icon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M9 18l6-6-6-6"></path>
+      </svg>
+    </button>
+    <button type="button" id="notesBtn" title="教师提示" aria-label="教师提示">
+      <svg class="control-icon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M9.2 9a2.9 2.9 0 1 1 5.6 1c-.8 1.8-2.8 1.8-2.8 4"></path>
+        <path d="M12 18h.01"></path>
+      </svg>
+    </button>
+    <button type="button" id="fullBtn" title="全屏" aria-label="全屏">
+      <svg class="control-icon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+        <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+        <path d="M21 16v3a2 2 0 0 1-2 2h-3"></path>
+        <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
+      </svg>
+    </button>
   </div>
 
   <div class="notes-panel" id="notesPanel"></div>

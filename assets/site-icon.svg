@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AI classroom icon">
+  <rect width="64" height="64" rx="14" fill="#17324d"/>
+  <circle cx="21" cy="22" r="6" fill="#ffcf5a"/>
+  <circle cx="43" cy="22" r="6" fill="#6ee7b7"/>
+  <path d="M18 42c5 5 23 5 28 0" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+</svg>
