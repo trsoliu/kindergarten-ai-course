@@ -406,11 +406,19 @@
       font-weight: 1000;
     }
 
-    .brand-badge img {
+    .brand-badge .brand-icon {
       width: clamp(42px, 5vw, 66px);
       height: clamp(42px, 5vw, 66px);
       border-radius: 8px;
       object-fit: cover;
+    }
+
+    .brand-badge .brand-logo {
+      width: clamp(176px, 17vw, 260px);
+      height: auto;
+      border-radius: 0;
+      object-fit: contain;
+      display: block;
     }
 
     .brand-badge.text-only {
@@ -1229,12 +1237,23 @@
 
       .scene-content,
       .scene-content.right {
-        width: auto;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
         min-height: 100svh;
         margin: 0;
         padding: 48svh 22px 76px;
         text-align: left;
+        justify-self: stretch;
         justify-items: start;
+      }
+
+      .brand-badge.logo-only {
+        max-width: calc(100vw - 44px);
+      }
+
+      .brand-badge .brand-logo {
+        width: min(176px, 58vw);
       }
 
       .controls {
@@ -1393,7 +1412,7 @@
       <div class="scene-vignette"></div>
       <div class="scene-content">
         <div class="brand-badge">
-          <img src="assets/doubao-icon.png" alt="豆包图标">
+          <img class="brand-icon" src="assets/doubao-icon.png" alt="豆包图标">
           <span>豆包</span>
         </div>
         <h2 class="scene-title">会回答</h2>
@@ -1415,8 +1434,8 @@
       <img class="scene-photo" src="assets/scene-smart-speaker.png" alt="孩子对家里的智能音箱说话">
       <div class="scene-vignette right"></div>
       <div class="scene-content right">
-        <div class="brand-badge text-only">
-          <span>小爱同学</span>
+        <div class="brand-badge logo-only">
+          <img class="brand-logo" src="assets/xiaoai-logo.png" alt="小爱同学完整标志">
         </div>
         <h2 class="scene-title">会听话</h2>
         <div class="scene-kicker">家里的音箱</div>
@@ -1436,7 +1455,8 @@
       <img class="scene-photo" src="assets/scene-car-assistant.png" alt="汽车中控屏上的导航和语音助手">
       <div class="scene-vignette"></div>
       <div class="scene-content">
-        <div class="brand-badge text-only">
+        <div class="brand-badge">
+          <img class="brand-icon" src="assets/xiaoyi-icon.png" alt="小艺图标">
           <span>小艺</span>
         </div>
         <h2 class="scene-title">会帮忙</h2>
