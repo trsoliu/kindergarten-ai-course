@@ -24,7 +24,7 @@ http://localhost:8123/
 
 ## 抓气球小游戏
 
-课堂互动页默认打开本地小游戏：
+本地预览时，课堂互动页默认打开本地小游戏：
 
 ```text
 http://localhost:8124/
@@ -35,6 +35,12 @@ http://localhost:8124/
 ```bash
 cd /Users/admin/work/gesture-balloon-game
 python3 -m http.server 8124
+```
+
+发布到 GitHub Pages 后，按钮会自动打开线上小游戏：
+
+```text
+https://trsoliu.github.io/gesture-balloon-game/
 ```
 
 ## 视频说明

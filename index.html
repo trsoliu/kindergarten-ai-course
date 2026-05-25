@@ -1115,7 +1115,14 @@
         </div>
         <h2>一起玩！</h2>
         <div class="cta-row">
-          <a class="action" href="http://localhost:8124/" target="_blank" rel="noreferrer">打开游戏</a>
+          <a
+            id="gameLink"
+            class="action"
+            href="http://localhost:8124/"
+            data-local-game="http://localhost:8124/"
+            data-remote-game="https://trsoliu.github.io/gesture-balloon-game/"
+            target="_blank"
+            rel="noreferrer">打开游戏</a>
         </div>
       </div>
       <aside class="notes">
@@ -1222,6 +1229,13 @@
       }
     }
 
+    function chooseGameLink() {
+      const gameLink = document.getElementById("gameLink");
+      if (!gameLink) return;
+      const isLocal = ["localhost", "127.0.0.1", ""].includes(location.hostname);
+      gameLink.href = isLocal ? gameLink.dataset.localGame : gameLink.dataset.remoteGame;
+    }
+
     function showSlide(index) {
       current = Math.max(0, Math.min(index, slides.length - 1));
       slides.forEach((slide, i) => {
@@ -1281,6 +1295,7 @@
 
     const hashIndex = Number(location.hash.replace("#", "")) - 1;
     chooseVideoSource();
+    chooseGameLink();
     showSlide(Number.isFinite(hashIndex) ? hashIndex : 0);
   </script>
 </body>
